@@ -36,33 +36,25 @@ user_input = st.text_input("Enter a feature requirement request to kickstart the
 
 # Custom execution function matching main.py logic to update Streamlit UI state
 async def run_visual_pipeline(room: RealBandRoom):
-    # Agent 1: Architect
+    # 1. Architect Action
     await room.send_message("📐 Architecture Blueprint Finalized.\nSpecs: {\"feature\": \"Rate Limiter\", \"language\": \"Python/FastAPI\"}\nHandoff to @engineer-agent.", "architect-agent")
-    st.session_state.room_logs = list(room.logs)
-    st.rerun()
     
-    # Agent 2: Engineer (Initial attempt)
+    # 2. Engineer Action (Initial attempt)
     await room.send_message("🛠️ Implementation Complete.\nSource Files: {\"middleware.py\": \"def rate_limiter()...\"}\nForwarding verification to @tester-agent.", "engineer-agent")
-    st.session_state.room_logs = list(room.logs)
-    st.rerun()
     
-    # Agent 3: Tester (Triggers the dynamic bug self-healing loop)
+    # 3. Tester Action (Triggers the dynamic bug self-healing loop)
     await room.send_message("❌ Code Verification Failed.\nTraceback Log: BUG_DETECTED - Missing validation boundary.\nReturning ownership back to @engineer-agent.", "tester-agent")
-    st.session_state.room_logs = list(room.logs)
-    st.rerun()
 
-    # Agent 2: Engineer (Applies fix)
+    # 4. Engineer Action (Applies fix)
     await room.send_message("🛠️ Implementation Bug Fixed.\nSource Files: {\"middleware.py\": \"def rate_limiter()... # Added Patch validation\"}\nRe-forwarding verification to @tester-agent.", "engineer-agent")
-    st.session_state.room_logs = list(room.logs)
-    st.rerun()
 
-    # Agent 3: Tester (Passes)
+    # 5. Tester Action (Passes)
     await room.send_message("✅ All Unit Assertions Passed (100% Coverage).\nForwarding to @pm-agent for deployment approval.", "tester-agent")
-    st.session_state.room_logs = list(room.logs)
-    st.rerun()
     
-    # Agent 4: PM Release
+    # 6. PM Release Action
     await room.send_message("🚀 PRODUCTION RELEASE AUTHORIZED.\nFinal Ship Manifest: {\"status\": \"PROMOTED_TO_PRODUCTION\"}\nClosing session room.", "pm-agent")
+    
+    # Update state and refresh the screen once at the very end
     st.session_state.room_logs = list(room.logs)
     st.session_state.running = False
     st.rerun()
