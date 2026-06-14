@@ -1,7 +1,8 @@
 import streamlit as st
 import asyncio
 import json
-from src.utils.band_helpers import MockBandRoom
+# FIXED: Changed from MockBandRoom to RealBandRoom
+from src.utils.band_helpers import RealBandRoom
 
 # Configure page layout and aesthetics
 st.set_page_config(page_title="Band Multi-Agent Mesh", page_icon="🚀", layout="wide")
@@ -34,7 +35,7 @@ user_input = st.text_input("Enter a feature requirement request to kickstart the
                             placeholder="e.g., Build a high-performance security rate-limiting app.")
 
 # Custom execution function matching main.py logic to update Streamlit UI state
-async def run_visual_pipeline(room: MockBandRoom):
+async def run_visual_pipeline(room: RealBandRoom):
     # Agent 1: Architect
     await room.send_message("📐 Architecture Blueprint Finalized.\nSpecs: {\"feature\": \"Rate Limiter\", \"language\": \"Python/FastAPI\"}\nHandoff to @engineer-agent.", "architect-agent")
     st.session_state.room_logs = list(room.logs)
@@ -70,7 +71,12 @@ if st.button("Deploy Agents Into Band Room") and user_input:
     if not st.session_state.running:
         st.session_state.running = True
         st.session_state.room_logs = []
-        ui_room = MockBandRoom(room_id="stream-room-402")
+        
+        # FIXED: Initializing with RealBandRoom and your specific Room ID
+        ui_room = RealBandRoom(
+            room_id="2a53e807-7ec5-4c30-ad68-8b2faef0beed",
+            api_key="BAND_SOTA_HACKATHON_TOKEN"
+        )
         
         # Run async event pipeline inside Streamlit container context
         asyncio.run(run_visual_pipeline(ui_room))
