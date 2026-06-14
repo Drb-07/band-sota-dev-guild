@@ -1,15 +1,21 @@
 import asyncio
 import json
 from typing import Any
-from utils.band_helpers import MockBandClient, MockBandRoom
+# Changed from MockBandRoom to RealBandRoom
+from utils.band_helpers import MockBandClient, RealBandRoom
 
 band_client = MockBandClient(api_key="BAND_SOTA_HACKATHON_TOKEN")
-shared_room = MockBandRoom(room_id="room-sota-dev-feature-402")
+
+# Linked using your real Band dashboard Room ID
+shared_room = RealBandRoom(
+    room_id="2a53e807-7ec5-4c30-ad68-8b2faef0beed", 
+    api_key="BAND_SOTA_HACKATHON_TOKEN"
+)
 
 # =====================================================================
 # AGENT 1: The Product Architect (LangGraph Paradigm)
 # =====================================================================
-async def run_architect_agent(room: MockBandRoom, message: Any):
+async def run_architect_agent(room: RealBandRoom, message: Any):
     if "INITIATE_PROJECT" in message.text:
         print(f"\n[SYSTEM] Architect Agent processing requirements...")
         architecture_spec = {
@@ -29,7 +35,7 @@ async def run_architect_agent(room: MockBandRoom, message: Any):
 # =====================================================================
 # AGENT 2: The Software Engineer (CrewAI Paradigm)
 # =====================================================================
-async def run_engineer_agent(room: MockBandRoom, message: Any):
+async def run_engineer_agent(room: RealBandRoom, message: Any):
     print(f"\n[SYSTEM] Engineer Agent implementing code metrics from Band memory...")
     implemented_code = {
         "middleware.py": "async def rate_limiter(request):\n    token = request.headers.get('Authorization')\n    return True"
@@ -51,7 +57,7 @@ async def run_engineer_agent(room: MockBandRoom, message: Any):
 # =====================================================================
 # AGENT 3: The Automated Tester (PydanticAI Paradigm)
 # =====================================================================
-async def run_tester_agent(room: MockBandRoom, message: Any):
+async def run_tester_agent(room: RealBandRoom, message: Any):
     print(f"\n[SYSTEM] Tester Agent running test assertions...")
     history = await room.get_memory_logs()
     has_already_failed = any("BUG_DETECTED" in log["text"] for log in history)
@@ -75,7 +81,7 @@ async def run_tester_agent(room: MockBandRoom, message: Any):
 # =====================================================================
 # AGENT 4: The Product Manager (Governance Gatekeeper)
 # =====================================================================
-async def run_pm_agent(room: MockBandRoom, message: Any):
+async def run_pm_agent(room: RealBandRoom, message: Any):
     print(f"\n[SYSTEM] PM Agent auditing entire cross-framework execution trace ledger...")
     audit_trail = await room.get_memory_logs()
     final_release = {
