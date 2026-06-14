@@ -8,7 +8,7 @@ st.set_page_config(page_title="Band Multi-Agent Mesh", page_icon="🚀", layout=
 
 st.title("🚀 Cross-Framework Multi-Agent SDLC Mesh")
 st.markdown("Powered by **Band Interaction Infrastructure** — Managing LangGraph, CrewAI, and PydanticAI boundaries cleanly.")
-st.hr()
+st.divider()
 
 # Initialize simulated room environment state
 if "room_logs" not in st.session_state:
